@@ -1,1 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Trading Signal AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<div class="auth-container">
+
+  <div class="auth-card">
+
+    <h1>📝 Sign Up</h1>
+    <p>Create an account and wait for admin approval.</p>
+
+    <form id="signupForm">
+
+      <input
+        type="text"
+        id="name"
+        placeholder="Full Name"
+        required
+      >
+
+      <input
+        type="email"
+        id="email"
+        placeholder="Gmail Address"
+        required
+      >
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Password"
+        required
+      >
+
+      <button type="submit">
+        Submit Request
+      </button>
+
+    </form>
+
+    <p class="bottom-text">
+      Already have an account?
+      <a href="login.html">
+        Login
+      </a>
+    </p>
+
+  </div>
+
+</div>
+
+<script>
+document
+.getElementById("signupForm")
+.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const name =
+    document.getElementById("name").value;
+
+  const email =
+    document.getElementById("email").value;
+
+  const password =
+    document.getElementById("password").value;
+
+  try {
+
+    const res = await fetch(
+      "/api/auth/signup",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert(
+        "Signup request submitted. Wait for admin approval."
+      );
+
+      window.location = "login.html";
+
+    } else {
+      alert(data.message);
+    }
+
+  } catch (err) {
+    alert("Server Error");
+  }
+});
+</script>
+
+</body>
+        </html>
