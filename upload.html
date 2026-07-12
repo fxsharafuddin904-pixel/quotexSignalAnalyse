@@ -1,1 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Chart - Trading Signal AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<nav class="dashboard-nav">
+  <h2>📷 Upload Chart</h2>
+
+  <a href="dashboard.html">
+    <button>Dashboard</button>
+  </a>
+</nav>
+
+<div class="auth-container">
+
+  <div class="auth-card">
+
+    <h1>Trading Chart Analysis</h1>
+
+    <form id="uploadForm">
+
+      <select id="market" required>
+        <option value="">Select Market</option>
+        <option value="Forex">Forex</option>
+        <option value="Crypto">Crypto</option>
+        <option value="Gold">Gold</option>
+        <option value="Stocks">Stocks</option>
+      </select>
+
+      <select id="timeframe" required>
+        <option value="">Select Timeframe</option>
+        <option value="1M">1 Minute</option>
+        <option value="5M">5 Minutes</option>
+        <option value="15M">15 Minutes</option>
+        <option value="1H">1 Hour</option>
+        <option value="4H">4 Hours</option>
+        <option value="1D">1 Day</option>
+      </select>
+
+      <input
+        type="text"
+        id="imageUrl"
+        placeholder="Chart Image URL"
+        required
+      >
+
+      <button type="submit">
+        Analyze Signal
+      </button>
+
+    </form>
+
+    <div id="resultBox"></div>
+
+  </div>
+
+</div>
+
+<script>
+const user =
+  JSON.parse(
+    localStorage.getItem("user")
+  );
+
+if (!user) {
+  window.location = "login.html";
+}
+
+document
+.getElementById("uploadForm")
+.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const market =
+    document.getElementById(
+      "market"
+    ).value;
+
+  const timeframe =
+    document.getElementById(
+      "timeframe"
+    ).value;
+
+  const imageUrl =
+    document.getElementById(
+      "imageUrl"
+    ).value;
+
+  const res = await fetch(
+    "/api/signal/upload",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type":
+          "application/json"
+      },
+      body: JSON.stringify({
+        userId: user.id,
+        market,
+        timeframe,
+        imageUrl
+      })
+    }
+  );
+
+  const data = await res.json();
+
+  if (data.success) {
+    document.getElementById(
+      "resultBox"
+    ).innerHTML = `
+      <div style="
+        margin-top:20px;
+        background:#151c35;
+        padding:20px;
+        border-radius:20px;
+      ">
+        <h3>
+          Signal:
+          ${data.data.signal}
+        </h3>
+
+        <p>
+          Confidence:
+          ${data.data.confidence}%
+        </p>
+
+        <p>
+          ${data.data.analysis}
+        </p>
+      </div>
+    `;
+  } else {
+    alert("Analysis failed");
+  }
+});
+</script>
+
+</body>
+          </html>
