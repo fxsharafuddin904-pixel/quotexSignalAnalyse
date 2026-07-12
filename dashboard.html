@@ -1,1 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Trading Signal AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<nav class="dashboard-nav">
+  <h2>📈 Trading Signal AI</h2>
+
+  <button id="logoutBtn">
+    Logout
+  </button>
+</nav>
+
+<div class="dashboard-container">
+
+  <div class="welcome-card">
+    <h1 id="welcomeText">
+      Welcome
+    </h1>
+
+    <p>
+      Upload a trading chart and get AI analysis.
+    </p>
+  </div>
+
+  <div class="menu-grid">
+
+    <a href="upload.html" class="menu-card">
+      <h3>📷 Upload Chart</h3>
+      <p>Upload a screenshot for analysis.</p>
+    </a>
+
+    <div class="menu-card">
+      <h3>📊 Signal History</h3>
+      <div id="historyBox">
+        Loading...
+      </div>
+    </div>
+
+    <div class="menu-card">
+      <h3>👤 Profile</h3>
+      <p id="emailText">
+        Loading...
+      </p>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const user =
+  JSON.parse(
+    localStorage.getItem("user")
+  );
+
+if (!user) {
+  window.location = "login.html";
+}
+
+document.getElementById(
+  "welcomeText"
+).innerText =
+  "Welcome, " + user.name;
+
+document.getElementById(
+  "emailText"
+).innerText =
+  user.email;
+
+// Load Signal History
+async function loadHistory() {
+  try {
+
+    const res = await fetch(
+      `/api/signal/history/${user.id}`
+    );
+
+    const data = await res.json();
+
+    const box =
+      document.getElementById(
+        "historyBox"
+      );
+
+    if (
+      !data.signals ||
+      data.signals.length === 0
+    ) {
+      box.innerHTML =
+        "No signals found.";
+      return;
+    }
+
+    box.innerHTML =
+      data.signals
+      .map(
+        (s) => `
+      <div style="
+        margin-top:15px;
+        padding:15px;
+        border-radius:15px;
+        background:#151c35;
+      ">
+        <b>${s.market}</b><br>
+        ${s.signal}<br>
+        Confidence:
+        ${s.confidence}%
+      </div>
+    `
+      )
+      .join("");
+
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+loadHistory();
+
+// Logout
+document.getElementById(
+  "logoutBtn"
+).onclick = () => {
+
+  localStorage.removeItem(
+    "token"
+  );
+
+  localStorage.removeItem(
+    "user"
+  );
+
+  window.location =
+    "login.html";
+};
+</script>
+
+</body>
+        </html>
