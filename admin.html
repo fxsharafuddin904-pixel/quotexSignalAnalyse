@@ -1,1 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Trading Signal AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<nav class="dashboard-nav">
+  <h2>🛠️ Admin Panel</h2>
+
+  <button id="logoutBtn">
+    Logout
+  </button>
+</nav>
+
+<div class="dashboard-container">
+
+  <div class="welcome-card">
+    <h1>Admin Dashboard</h1>
+    <p>Approve or reject new users.</p>
+  </div>
+
+  <div class="menu-card">
+    <h3>📋 Pending Users</h3>
+
+    <div id="pendingUsers">
+      Loading...
+    </div>
+  </div>
+
+</div>
+
+<script>
+const user =
+  JSON.parse(
+    localStorage.getItem("user")
+  );
+
+if (!user || user.role !== "admin") {
+  window.location = "login.html";
+}
+
+async function loadPendingUsers() {
+  try {
+    const res =
+      await fetch(
+        "/api/admin/pending-users"
+      );
+
+    const data =
+      await res.json();
+
+    const box =
+      document.getElementById(
+        "pendingUsers"
+      );
+
+    if (
+      !data.users ||
+      data.users.length === 0
+    ) {
+      box.innerHTML =
+        "No pending users.";
+      return;
+    }
+
+    box.innerHTML =
+      data.users
+        .map(
+          (u) => `
+      <div style="
+        background:#151c35;
+        padding:15px;
+        margin-top:15px;
+        border-radius:15px;
+      ">
+        <b>${u.name}</b><br>
+        ${u.email}<br><br>
+
+        <button
+          onclick="approveUser(${u.id})"
+        >
+          Approve
+        </button>
+
+        <button
+          onclick="rejectUser(${u.id})"
+        >
+          Reject
+        </button>
+      </div>
+    `
+        )
+        .join("");
+
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function approveUser(id) {
+  await fetch(
+    `/api/admin/approve/${id}`,
+    {
+      method: "PUT"
+    }
+  );
+
+  loadPendingUsers();
+}
+
+async function rejectUser(id) {
+  await fetch(
+    `/api/admin/reject/${id}`,
+    {
+      method: "DELETE"
+    }
+  );
+
+  loadPendingUsers();
+}
+
+loadPendingUsers();
+
+document.getElementById(
+  "logoutBtn"
+).onclick = () => {
+  localStorage.clear();
+  window.location =
+    "login.html";
+};
+</script>
+
+</body>
+  </html>
