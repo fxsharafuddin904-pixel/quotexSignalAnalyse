@@ -1,1 +1,180 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
+}
 
+body{
+  background:linear-gradient(135deg,#0f172a,#1e293b,#111827);
+  color:#fff;
+  min-height:100vh;
+}
+
+/* Navbar */
+.navbar,
+.dashboard-nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 40px;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(15px);
+}
+
+button{
+  background:linear-gradient(45deg,#00c6ff,#0072ff);
+  color:#fff;
+  border:none;
+  padding:12px 22px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:15px;
+  transition:0.3s;
+}
+
+/* Click করলে একটু বড় হবে */
+button:active,
+.card:active,
+.menu-card:active{
+  transform:scale(1.08);
+}
+
+button:hover,
+.card:hover,
+.menu-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 10px 25px rgba(0,114,255,.4);
+}
+
+/* Hero Section */
+.hero{
+  text-align:center;
+  padding:100px 20px;
+}
+
+.hero h1{
+  font-size:50px;
+  margin-bottom:20px;
+}
+
+.hero p{
+  font-size:20px;
+  color:#cbd5e1;
+  margin-bottom:30px;
+}
+
+.start-btn{
+  font-size:18px;
+  padding:15px 35px;
+}
+
+/* Cards */
+.features,
+.menu-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:25px;
+  padding:40px;
+}
+
+.card,
+.menu-card,
+.auth-card,
+.welcome-card{
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:25px;
+  padding:25px;
+  transition:0.3s;
+}
+
+/* Form */
+.auth-container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:85vh;
+}
+
+.auth-card{
+  width:100%;
+  max-width:500px;
+}
+
+.auth-card h1{
+  margin-bottom:10px;
+}
+
+.auth-card p{
+  margin-bottom:20px;
+  color:#cbd5e1;
+}
+
+input,
+select{
+  width:100%;
+  padding:14px;
+  margin-bottom:15px;
+  border:none;
+  border-radius:12px;
+  background:#1e293b;
+  color:#fff;
+  font-size:15px;
+}
+
+input:focus,
+select:focus{
+  outline:none;
+  border:2px solid #00c6ff;
+}
+
+.bottom-text{
+  text-align:center;
+  margin-top:20px;
+}
+
+.bottom-text a{
+  color:#00c6ff;
+  text-decoration:none;
+}
+
+/* Dashboard */
+.dashboard-container{
+  padding:40px;
+}
+
+.welcome-card{
+  margin-bottom:30px;
+}
+
+footer{
+  text-align:center;
+  padding:30px;
+  color:#94a3b8;
+}
+
+/* Mobile */
+@media(max-width:768px){
+
+  .navbar,
+  .dashboard-nav{
+    flex-direction:column;
+    gap:15px;
+  }
+
+  .hero h1{
+    font-size:35px;
+  }
+
+  .hero p{
+    font-size:17px;
+  }
+
+  .dashboard-container,
+  .features,
+  .menu-grid{
+    padding:20px;
+  }
+  }
